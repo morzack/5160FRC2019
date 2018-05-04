@@ -88,6 +88,7 @@ public class DriveTrain extends Subsystem {
 	public void teleopPeriodic() {
 		if (OI.getSlowModeButton()) {
 			OI.slowMode = !OI.slowMode;
+			// TODO get button
 		}
 		if (OI.getReverseButton()) {
 			OI.reversed = !OI.reversed;
@@ -99,47 +100,28 @@ public class DriveTrain extends Subsystem {
 		}
 		if (OI.getShutoffButton()) {
 			OI.shutoff = !OI.shutoff;
+			// TODO get button
 		}
 		if (OI.getDriveSwapButton()) {
 			OI.tankDrive = !OI.tankDrive;
+			// TODO get button
 		}
 		
-
-		if (!OI.shutoff) {
-			if (!OI.tankDrive) {
-				double twist;
-				if (OI.getJoystickOtherRotationX() != 0) {
-					twist = OI.getJoystickOtherRotationX();
-				} else {
-					twist = OI.getJoystickTwist();
-				}
-
-				if (fieldOriented) {
-					this.mecanumDriveField(OI.getJoystickY() * (OI.slowMode ? OI.slowModifier : 1),
-							OI.getJoystickX() * (OI.slowMode ? OI.slowModifier : 1),
-							twist * (OI.slowMode ? OI.slowModifier : 1),
-							OI.getJoystickRotationY() * (OI.slowMode ? OI.slowModifier : 1));
-				} else {
-					double turnSpeed = RMath.clamp(0.5, 1.0, OI.getJoystickSlider() + 0.5);
-					if (OI.reversed) {
-						this.mecanumDrive(OI.getJoystickY() * (OI.slowMode ? OI.slowModifier : 1),
-								OI.getJoystickX() * (OI.slowMode ? OI.slowModifier : 1),
-								twist * (OI.slowMode ? OI.slowModifier : 1) * (OI.turnSlow ? turnSpeed : 1));
-					} else {
-						this.mecanumDrive(-OI.getJoystickY() * (OI.slowMode ? OI.slowModifier : 1),
-								-OI.getJoystickX() * (OI.slowMode ? OI.slowModifier : 1),
-								twist * (OI.slowMode ? OI.slowModifier : 1) * (OI.turnSlow ? turnSpeed : 1));
-					}
-				}
-			} else {
-				if (OI.reversed) {
-					this.tankDrive(OI.getJoystickY() * (OI.slowMode ? OI.slowModifier : 1),
-							OI.getJoystick2Y() * (OI.slowMode ? OI.slowModifier : 1));
-				} else {
-					this.tankDrive(-OI.getJoystickY() * (OI.slowMode ? OI.slowModifier : 1),
-							-OI.getJoystick2Y() * (slowMode ? OI.slowModifier : 1));
+		if (!OI.tankDrive) {
+			if(fieldOriented){
+				this.mecanumDriveField(OI.getJoystickY(), OI.getJoystickX(), OI.getJoystickRotationX(), OI.getJoystickRotationY());
+			}
+			else{
+				double turnSpeed = RMath.clamp(0.5, 1.0, OI.getJoystickSlider() + 0.5);
+				if(OI.reversed){
+					this.mecanumDrive(OI.getJoystickY(), OI.getJoystickX(), OI.getJoystickRotationX() * (OI.turnSlow ? turnSpeed : 1));
+				}else{
+					this.mecanumDrive(-OI.getJoystickY(), -OI.getJoystickX(), OI.getJoystickRotationX() * (OI.turnSlow ? turnSpeed : 1));
 				}
 			}
+		}
+		else {
+			this.tankDrive(OI.getJoystickY(), OI.getJoystick2Y());
 		}
 	}
 

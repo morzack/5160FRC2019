@@ -41,14 +41,14 @@ public class OI {
 	
 	public static double getJoystickX(){
 		if(Math.abs(driver1.getX()) > 0.05){
-			return driver1.getX()*driver1.getX() * Math.signum(driver1.getX());
+			return (driver1.getX()*driver1.getX() * Math.signum(driver1.getX()))*(slowMode?slowModifier:1);
 		}
 		return 0;
 	}
 	
 	public static double getJoystickY(){
 		if(Math.abs(driver1.getY()) > 0.05){
-			return driver1.getY()*driver1.getY() * Math.signum(driver1.getY());
+			return driver1.getY()*driver1.getY() * Math.signum(driver1.getY())*(slowMode?slowModifier:1);
 		}
 		return 0;
 	}
@@ -64,7 +64,7 @@ public class OI {
 	
 	public static double getJoystick2Y() {
 		if (Math.abs(driver2.getY()) > 0.05) {
-			return driver2.getY()*driver2.getY() * Math.signum(driver2.getY());
+			return driver2.getY()*driver2.getY() * Math.signum(driver2.getY())*(slowMode?slowModifier:1);
 		}
 		return 0;
 	}
