@@ -1,7 +1,7 @@
 package org.chargers.frc2018.subsystems;
 
 import org.chargers.frc2018.Constants;
-import org.chargers.frc2018.OI;
+import org.chargers.frc2019.OI;
 import org.chargers.frc2018.RobotMap;
 import org.usfirst.frc.team5160.utils.BasicPID;
 import org.usfirst.frc.team5160.utils.RMath;
@@ -16,31 +16,31 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 
 public class DriveTrain extends Subsystem {
+	// current position/speed
 	private double posX = 0, posY = 0, speed = 0;
+	
+	// encoder values
 	private double lastEncoderDistance;
-	private static final double TICK_TO_INCH = Constants.kWheelDiameter * Math.PI / 256.0;// 256
-																							// ticks
-																							// per
-																							// rev,
-																							// 6
-																							// inch
-																							// diameter
-																							// wheels
+	private static final double TICK_TO_INCH = Constants.kWheelDiameter * Math.PI / 256.0;// 256 ticks per revolution
+	
+	// field oriented
 	private Timer timeSinceLastDrive = new Timer();
 	private boolean fieldOriented = false;
-	private boolean tankDrive = false;
-	private boolean slowMode = false;
-	private boolean shutoff = false;
 
+	// turning
 	private double desired_angle = 90;
 	private BasicPID turnPID;
 
+	// HARDWARE
+	// motors
 	public WPI_TalonSRX frontRight;
 	public WPI_TalonSRX backRight;
 	public WPI_TalonSRX frontLeft;
 	public WPI_TalonSRX backLeft;
+	// encoders
 	public Encoder leftEncoder;
 	public Encoder rightEncoder;
+	// sensors
 	public ADXRS450_Gyro gyro;
 
 	@Override
@@ -86,39 +86,24 @@ public class DriveTrain extends Subsystem {
 
 	@Override
 	public void teleopPeriodic() {
-		if (OI.getSlowModeButton()) {
-			OI.slowMode = !OI.slowMode;
-			// BUTTON 10, SOMETHING ON THE SIDE (where beast mode is)
+		// handle toggles
+		if (OI.getSpeedButton()) {
+			OI.toggleSpeed = !OI.toggleSpeed;
 		}
-		if (OI.getShutoffButton()) {
-			OI.shutoff = !OI.shutoff;
-			// A BUTTON ON SAFETY CONTROLLER
+		if (OI.getDirectionButton()) {
+			OI.toggleDirection = !OI.toggleDirection;
 		}
-		if (OI.getDriveSwapButton()) {
-			OI.tankDrive = !OI.tankDrive;
-			// BUTTON 0/1, TRIGGER OR SOMETHING ON THE HAT (FORGOT WHAT) ON DRIVER1
-		}
-		if (OI.getReverseButton()) {
-			OI.reversed = !OI.reversed;
-			// B BUTTON ON DRIVER1
-		}
-		if (OI.getTurnSpeedButton()) {
-			OI.turnSlow = !OI.turnSlow;
-			// A BUTTON ON DRIVER1
+		if (OI.getTankDriveButton()) {
+			OI.toggleTankDrive = !OI.toggleTankDrive;
 		}
 		
-		
-		if (!OI.tankDrive) {
-			if(fieldOriented){
-				this.mecanumDriveField(OI.getJoystickY(), OI.getJoystickX(), OI.getJoystickRotationX(), OI.getJoystickRotationY());
-			}
-			else{
-				double turnSpeed = RMath.clamp(0.5, 1.0, OI.getJoystickSlider() + 0.5);
-				this.mecanumDrive(OI.getJoystickY(), OI.getJoystickX(), OI.getJoystickRotationX() * (OI.turnSlow ? turnSpeed : 1));
-			}
+		// drive
+		if (!OI.toggleTankDrive) {
+			double turnSpeed = RMath.clamp(0.5, 1.0, OI.getJoystickSlider(0) + 0.5);
+			this.mecanumDrive(OI.getJoystickY(0), OI.getJoystickX(0), OI.getJoystickTwist(0));
 		}
 		else {
-			this.tankDrive(OI.getJoystickY(), OI.getJoystick2Y());
+			this.tankDrive(OI.getJoystickY(0), OI.getJoystickY(1));
 		}
 	}
 
@@ -155,7 +140,7 @@ public class DriveTrain extends Subsystem {
 		turnPID = new BasicPID(Constants.kTeleTurnKp, Constants.kTeleTurnKi, Constants.kTeleTurnKd);
 	}
 
-	/***
+	/**
 	 * ChargerCanum field oriented drive and rotation
 	 * 
 	 * @param forwards
@@ -175,10 +160,7 @@ public class DriveTrain extends Subsystem {
 
 		if (Math.pow(rotation_x, 2) + Math.pow(rotation_y, 2) > Constants.kRotationJoystickDeadzone) {
 			desired_angle = Math.toDegrees(Math.atan2(rotation_y, rotation_x));
-			// System.out.println(rotation_x + ", "+rotation_y);
 		}
-		// System.out.println(desired_angle+ ", "+ rotation_x + ",
-		// "+rotation_y);
 		// Finds the error in angle between the robot and the target. Returns a
 		// value in degrees, and finds whether to rotate clockwise or counter
 		// clockwise
@@ -212,7 +194,7 @@ public class DriveTrain extends Subsystem {
 		backRight.set(forwards + sideways + rotation);
 	}
 
-	/***
+	/**
 	 * Robot oriented typical mecanum drive
 	 * 
 	 * @param forwards
@@ -229,8 +211,6 @@ public class DriveTrain extends Subsystem {
 	 *            lead to faster speeds
 	 */
 	public void mecanumDrive(double forwards, double sideways, double rotation) {
-
-		forwards = forwards;
 		rotation = rotation * 0.65;
 
 		double[] tmp = RMath.normalizeThree(forwards, sideways, rotation);
@@ -255,9 +235,9 @@ public class DriveTrain extends Subsystem {
 		this.posY = this.posY + deltaY;
 		this.speed = deltaDistance / deltaTime;
 		timeSinceLastDrive.reset();
-		System.out.println(rotation);
 	}
 
+	// Direct drive system, handles each side with custom power
 	public void tankDrive(double a, double b) {
 		frontLeft.set(a);
 		backLeft.set(a);

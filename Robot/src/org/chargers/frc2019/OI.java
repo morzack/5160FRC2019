@@ -21,6 +21,7 @@ public class OI {
 	// toggle booleans
 	public static boolean toggleSpeed = false;		// trigger on driver 1
 	public static boolean toggleDirection = false;	// thumb button on driver 1
+	public static boolean toggleTankDrive = false;	// button 3 on driver 1
 	
 	// other constants
 	public static double slowSpeed = 0.5;	// slow mode
@@ -75,6 +76,9 @@ public class OI {
 	public static boolean getDirectionButton() {
 		return joystick0.getRawButtonPressed(OIConstants.DIRECTION_TOGGLE_BUTTON);
 	}
+	public static boolean getTankDriveButton() {
+		return joystick0.getRawButtonPressed(OIConstants.TANK_DRIVE_BUTTON);
+	}
 	public static boolean getElevatorMoveUp(){
 		return joystick2.getRawButtonPressed(OIConstants.ELEVATOR_UP_BUTTON);
 	}
@@ -82,10 +86,10 @@ public class OI {
 		return joystick2.getRawButtonPressed(OIConstants.ELEVATOR_DOWN_BUTTON);
 	}
 	public static double getIntakePower(){
-		if (joystick2.getRawButton(OIConstants.INTAKE_POWER_POSITIVE)) {
+		if (joystick2.getRawButton(Constants.INTAKE_POWER_POSITIVE)) {
 			return 1;
 		}
-		else if (joystick2.getRawButton(OIConstants.INTAKE_POWER_NEGATIVE)) {
+		else if (joystick2.getRawButton(Constants.INTAKE_POWER_NEGATIVE)) {
 			return -1;
 		}
 		else {
