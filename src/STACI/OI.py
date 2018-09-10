@@ -4,7 +4,7 @@ import wpilib, wpilib.buttons
 
 class OI():
     # input modifier constants
-    slowedAmount = 0.25     # amount to slow the robot by when slowed down (cooef)
+    slowedAmount = 0.8     # amount to slow the robot by when slowed down (cooef)
 
     def __init__(self):
         # set up joysticks

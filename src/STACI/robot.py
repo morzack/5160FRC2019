@@ -2,6 +2,7 @@
 
 import wpilib
 import wpilib.drive
+import ctre
 from OI import *
 
 
@@ -9,17 +10,17 @@ class Robot(wpilib.IterativeRobot):
     
     # motor ports
     # DRIVETRAIN
-    frontLeftPort = 14
-    backLeftPort = 13
-    frontRightPort = 1
+    frontLeftPort = 1
+    backLeftPort = 4
+    frontRightPort = 3
     backRightPort = 2
 
     def robotInit(self):
         # assign motors to object
-        self.motorLeftFront = wpilib.PWMTalonSRX(Robot.frontLeftPort)
-        self.motorLeftBack = wpilib.PWMTalonSRX(Robot.backLeftPort)
-        self.motorRightFront =  wpilib.PWMTalonSRX(Robot.frontRightPort)
-        self.motorRightBack = wpilib.PWMTalonSRX(Robot.backRightPort)
+        self.motorLeftFront = ctre.WPI_TalonSRX(Robot.frontLeftPort)
+        self.motorLeftBack = ctre.WPI_TalonSRX(Robot.backLeftPort)
+        self.motorRightFront =  ctre.WPI_TalonSRX(Robot.frontRightPort)
+        self.motorRightBack = ctre.WPI_TalonSRX(Robot.backRightPort)
         # invert motors
         self.motorLeftFront.setInverted(True)
         self.motorLeftBack.setInverted(True)
@@ -42,7 +43,7 @@ class Robot(wpilib.IterativeRobot):
     def autonomousPeriodic(self):
         # this method is called repeatedly
         if self.timer.get() < 2.0:
-            self.drivetrain.tankDrive(-0.5, -0.5)
+            self.drivetrain.tankDrive(-0.8, -0.8)
         else:
             self.drivetrain.tankDrive(0, 0)  # Stop robot
         self.motorLeftBack.set
@@ -57,7 +58,7 @@ class Robot(wpilib.IterativeRobot):
         self.OI.handleInput()
         # move the mecanum DT w/ OI modifiers
         self.drivetrain.tankDrive(self.OI.handleNumber(self.OI.joystick0.getY(wpilib.XboxController.Hand.kLeft)),
-                                        self.OI.handleNumber(self.OI.joystick0.getY(wpilib.XboxController.Hand.kRight)))
+                                        self.OI.handleNumber(-self.OI.joystick0.getY(wpilib.XboxController.Hand.kRight)))
     
 # this is NEEDED because threads are a thing
 # you dont want like 5 robot code instnaces, right?
