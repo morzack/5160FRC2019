@@ -18,7 +18,7 @@ class Robot(wpilib.IterativeRobot):
     # compressor
     solenoidPortIn = 0
     solenoidPortOut = 1
-    pcmCan = 3 # TODO
+    pcmCan = 0
 
     def robotInit(self):
         # assign motors to object
@@ -70,10 +70,10 @@ class Robot(wpilib.IterativeRobot):
         self.drivetrain.tankDrive(self.OI.handleNumber(self.OI.joystick0.getY(wpilib.XboxController.Hand.kLeft)),
                                         self.OI.handleNumber(-self.OI.joystick0.getY(wpilib.XboxController.Hand.kRight)))
         # set solenoids
-        self.solenoidIn.set(self.OI.joystick0.getY())
-        self.solenoidOut.set(self.OI.joystick0.getX())
+        self.solenoidIn.set(self.OI.joystick0.getYButton())
+        self.solenoidOut.set(self.OI.joystick0.getXButton())
         # set compressor
-        if self.compressor.getPressureSwitchValue():
+        if not self.compressor.getPressureSwitchValue():
             self.compressor.start()
         else:
             self.compressor.stop()
