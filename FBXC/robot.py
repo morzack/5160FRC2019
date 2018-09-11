@@ -5,57 +5,19 @@ import wpilib.drive
 import ctre
 from OI import *
 from drivetrain import *
-
+from intake import *
 
 class Robot(wpilib.IterativeRobot):
-    motorData = {
-        "driveLeftFront"    : {
-            "port"          : 2,
-            "type"          : "TalonSRX",
-            "inverted"      : True
-        },
-        "driveRightFront"   : {
-            "port"          : 13,
-            "type"          : "TalonSRX",
-            "inverted"      : False
-        },
-        "driveLeftBack"    : {
-            "port"          : 1,
-            "type"          : "TalonSRX",
-            "inverted"      : True
-        },
-        "driveRightBack"   : {
-            "port"          : 14,
-            "type"          : "TalonSRX",
-            "inverted"      : False
-        },
-
-        "intakeLift"        : {
-            "port"          : 11,
-            "type"          : "TalonSRX",
-            "inverted"      : False
-        },
-        "intakeLeftArm"     : {
-            "port"          : 5,
-            "type"          : "TalonSRX",
-            "inverted"      : True
-        },
-        "intakeRightArm"    : {
-            "port"          : 10,
-            "type"          : "TalonSRX",
-            "inverted"      : False
-        }
-    }
-
     def robotInit(self):
         # get drivetrain
         self.dt = Drivetrain()
-
+        # get intake
+        self.intake = Intake()
         # misc initializations
         # set up a timer to allow for cheap drive by time auto
         self.timer = wpilib.Timer()
         # initialize OI systems for the robot 
-        self.OI = OI()
+        self.OI = OI.OI()
 
     def autonomousInit(self):
         # this runs before the autonomous
@@ -80,6 +42,8 @@ class Robot(wpilib.IterativeRobot):
         self.OI.handleInput()
         # move the mecanum DT w/ OI modifiers
         self.dt.handleDriving(self.OI, 0)
+        # do stuff with intake
+        self.intake.handleIntake(self.OI, 2)
     
 # this is NEEDED because threads are a thing
 # you dont want like 5 robot code instnaces, right?
