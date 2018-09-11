@@ -1,0 +1,38 @@
+{
+    "driveLeftFront"    : {
+        "port"          : 2,
+        "type"          : "TalonSRX",
+        "inverted"      : true
+    },
+    "driveRightFront"   : {
+        "port"          : 13,
+        "type"          : "TalonSRX",
+        "inverted"      : false
+    },
+    "driveLeftBack"    : {
+        "port"          : 1,
+        "type"          : "TalonSRX",
+        "inverted"      : true
+    },
+    "driveRightBack"   : {
+        "port"          : 14,
+        "type"          : "TalonSRX",
+        "inverted"      : false
+    },
+
+    "intakeLift"        : {
+        "port"          : 11,
+        "type"          : "TalonSRX",
+        "inverted"      : false
+    },
+    "intakeLeftArm"     : {
+        "port"          : 5,
+        "type"          : "TalonSRX",
+        "inverted"      : true
+    },
+    "intakeRightArm"    : {
+        "port"          : 10,
+        "type"          : "TalonSRX",
+        "inverted"      : false
+    }
+}

@@ -4,46 +4,27 @@ import wpilib
 import wpilib.drive
 import ctre
 from OI import *
+import json
 
 
 class Robot(wpilib.IterativeRobot):
-    
-    # motor ports
-    # DRIVETRAIN
-    frontLeftPort = 2
-    backLeftPort = 1
-    frontRightPort = 13
-    backRightPort = 14
-    # INTAKE
-    intakeLiftPort = 11
-    intakeRightPort = 10
-    intakeLeftPort = 5
-
     def robotInit(self):
-        # initialize drivetrain
-        # assign motors to object
-        self.motorLeftFront = ctre.WPI_TalonSRX(Robot.frontLeftPort)
-        self.motorLeftBack = ctre.WPI_TalonSRX(Robot.backLeftPort)
-        self.motorRightFront =  ctre.WPI_TalonSRX(Robot.frontRightPort)
-        self.motorRightBack = ctre.WPI_TalonSRX(Robot.backRightPort)
-        # invert motors
-        self.motorLeftFront.setInverted(True)
-        self.motorLeftBack.setInverted(True)
-        # make motor groups
-        self.leftMotors = wpilib.SpeedControllerGroup(self.motorLeftBack, self.motorLeftFront)
-        self.rightMotors = wpilib.SpeedControllerGroup(self.motorRightBack, self.motorRightFront)
-        # create a drivetrain ovject to access motors easier
-        self.drivetrain = wpilib.drive.MecanumDrive(self.motorLeftFront, self.motorLeftBack, self.motorRightFront, self.motorRightBack)
-        
+        # fancy motor json loading
+        motorData = json.loads(open("motors.json").read())
+        self.motors = {}
+        for motor in motorData:
+            if motorData[motor]["type"] == "TalonSRX":
+                self.motors[motor] = ctre.WPI_TalonSRX(motorData[motor]["port"])
+                self.motors[motor].setInverted(motorData[motor]["inverted"])
+
+        # drivetrain
+        self.leftMotors = wpilib.SpeedControllerGroup(self.motors["driveLeftFront"], self.motors["driveLeftBack"])
+        self.rightMotors = wpilib.SpeedControllerGroup(self.motors["driveRightFront"], self.motors["driveRightBack"])
+        # create a drivetrain object to access motors easier
+        self.drivetrain = wpilib.drive.MecanumDrive(self.motors["driveLeftFront"], self.motors["driveLeftBack"], self.motors["driveRightFront"], self.motors["driveRightBack"])
         # initalize intake
-        # assign motors
-        self.motorIntakeLift = ctre.WPI_TalonSRX(Robot.intakeLiftPort)
-        self.motorIntakeRight = ctre.WPI_TalonSRX(Robot.intakeRightPort)
-        self.motorIntakeLeft = ctre.WPI_TalonSRX(Robot.intakeLeftPort)
-        # invert motors
-        self.motorIntakeLeft.setInverted(True)
         # make motor group
-        self.intakeMotors = wpilib.SpeedControllerGroup(self.motorIntakeLeft, self.motorIntakeRight)
+        self.intakeMotors = wpilib.SpeedControllerGroup(self.motors["intakeLeftArm"], self.motors["intakeRightArm"])
 
         # misc initializations
         # set up a timer to allow for cheap drive by time auto
