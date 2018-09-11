@@ -15,6 +15,11 @@ class Robot(wpilib.IterativeRobot):
     frontRightPort = 3
     backRightPort = 2
 
+    # compressor
+    solenoidPortIn = 0
+    solenoidPortOut = 1
+    pcmCan = 3 # TODO
+
     def robotInit(self):
         # assign motors to object
         self.motorLeftFront = ctre.WPI_TalonSRX(Robot.frontLeftPort)
@@ -33,6 +38,11 @@ class Robot(wpilib.IterativeRobot):
         self.timer = wpilib.Timer()
         # initialize OI systems for the robot 
         self.OI = OI()
+        # solenoids
+        self.solenoidIn = wpilib.Solenoid(Robot.solenoidPortIn)
+        self.solenoidOut = wpilib.Solenoid(Robot.solenoidPortOut)
+        # valve
+        self.compressor = wpilib.Compressor(Robot.pcmCan)
 
     def autonomousInit(self):
         # this runs before the autonomous
@@ -59,6 +69,14 @@ class Robot(wpilib.IterativeRobot):
         # move the mecanum DT w/ OI modifiers
         self.drivetrain.tankDrive(self.OI.handleNumber(self.OI.joystick0.getY(wpilib.XboxController.Hand.kLeft)),
                                         self.OI.handleNumber(-self.OI.joystick0.getY(wpilib.XboxController.Hand.kRight)))
+        # set solenoids
+        self.solenoidIn.set(self.OI.joystick0.getY())
+        self.solenoidOut.set(self.OI.joystick0.getX())
+        # set compressor
+        if self.compressor.getPressureSwitchValue():
+            self.compressor.start()
+        else:
+            self.compressor.stop()
     
 # this is NEEDED because threads are a thing
 # you dont want like 5 robot code instnaces, right?
