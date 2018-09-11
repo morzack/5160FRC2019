@@ -4,18 +4,55 @@ import wpilib
 import wpilib.drive
 import ctre
 from OI import *
-import json
 
 
 class Robot(wpilib.IterativeRobot):
+    motorData = {
+        "driveLeftFront"    : {
+            "port"          : 2,
+            "type"          : "TalonSRX",
+            "inverted"      : True
+        },
+        "driveRightFront"   : {
+            "port"          : 13,
+            "type"          : "TalonSRX",
+            "inverted"      : False
+        },
+        "driveLeftBack"    : {
+            "port"          : 1,
+            "type"          : "TalonSRX",
+            "inverted"      : True
+        },
+        "driveRightBack"   : {
+            "port"          : 14,
+            "type"          : "TalonSRX",
+            "inverted"      : False
+        },
+
+        "intakeLift"        : {
+            "port"          : 11,
+            "type"          : "TalonSRX",
+            "inverted"      : False
+        },
+        "intakeLeftArm"     : {
+            "port"          : 5,
+            "type"          : "TalonSRX",
+            "inverted"      : True
+        },
+        "intakeRightArm"    : {
+            "port"          : 10,
+            "type"          : "TalonSRX",
+            "inverted"      : False
+        }
+    }
+
     def robotInit(self):
         # fancy motor json loading
-        motorData = json.loads(open("motors.json").read())
         self.motors = {}
-        for motor in motorData:
-            if motorData[motor]["type"] == "TalonSRX":
-                self.motors[motor] = ctre.WPI_TalonSRX(motorData[motor]["port"])
-                self.motors[motor].setInverted(motorData[motor]["inverted"])
+        for motor in Robot.motorData:
+            if Robot.motorData[motor]["type"] == "TalonSRX":
+                self.motors[motor] = ctre.WPI_TalonSRX(Robot.motorData[motor]["port"])
+                self.motors[motor].setInverted(Robot.motorData[motor]["inverted"])
 
         # drivetrain
         self.leftMotors = wpilib.SpeedControllerGroup(self.motors["driveLeftFront"], self.motors["driveLeftBack"])
