@@ -10,13 +10,16 @@ class OI():
         # set up joysticks
         self.joystick0 = wpilib.XboxController(0) # usually driver joystick
         self.joystick1 = wpilib.XboxController(1) # usually driver joystick, part 2
-        self.joystick2 = wpilib.XboxController(2) # sysop stick
-        self.joysticks = [self.joystick0, self.joystick1, self.joystick2]   # for easier access later
+        self.joysticks2 = wpilib.XboxController(2) # sysop stick
+        self.joysticks = [self.joystick0, self.joystick1, self.joysticks2]   # for easier access later
         # set up modifiers
         self.modifiers = {"slowed" : False, "reversed" : False}
         
     def inverseModifier(self, mod):
         self.modifiers[mod] = not self.modifiers[mod]
+
+    def handleWithoutSpeed(self, i):
+        return (i * (-1 if self.modifiers["reversed"] else 1))
 
     def handleInput(self):
         # handle special input
