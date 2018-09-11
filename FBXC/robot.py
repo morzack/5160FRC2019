@@ -75,7 +75,25 @@ class Robot(wpilib.IterativeRobot):
         # move the mecanum DT w/ OI modifiers
         self.drivetrain.driveCartesian(self.OI.handleNumber(self.OI.joystick0.getX(wpilib.XboxController.Hand.kLeft)),
                                         self.OI.handleNumber(self.OI.joystick0.getY(wpilib.XboxController.Hand.kLeft)),
-                                        self.OI.handleNumber(self.OI.joystick0.getX(wpilib.XboxController.Hand.kRight)))
+                                        self.OI.handleNumber(-1 * self.OI.joystick0.getX(wpilib.XboxController.Hand.kRight)))
+
+        #out
+
+        if self.OI.joystick2.getTriggerAxis(wpilib.XboxController.Hand.kRight) > 0.1:
+            self.motorIntakeLeft.set(self.OI.joystick2.getTriggerAxis(wpilib.XboxController.Hand.kRight))
+            self.motorIntakeRight.set(-1 * self.OI.joystick2.getTriggerAxis(wpilib.XboxController.Hand.kRight))
+
+        #in
+        if self.OI.joystick2.getTriggerAxis(wpilib.XboxController.Hand.kLeft) > 0.1:
+            self.motorIntakeLeft.set(-1 * self.OI.joystick2.getTriggerAxis(wpilib.XboxController.Hand.kLeft))
+            self.motorIntakeRight.set(self.OI.joystick2.getTriggerAxis(wpilib.XboxController.Hand.kLeft))
+
+        if self.OI.joystick2.getTriggerAxis(wpilib.XboxController.Hand.kLeft) < 0.1 and self.OI.joystick2.getTriggerAxis(wpilib.XboxController.Hand.kRight) < 0.1:
+            self.motorIntakeLeft.set(0)
+            self.motorIntakeRight.set(0)
+
+        #lift
+        self.motorIntakeLift.set(self.OI.joystick2.getY(wpilib.XboxController.Hand.kRight))
     
 # this is NEEDED because threads are a thing
 # you dont want like 5 robot code instnaces, right?
