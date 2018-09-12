@@ -20,6 +20,8 @@ class Robot(wpilib.IterativeRobot):
     solenoidPortOut = 1
     pcmCan = 0
 
+
+
     def robotInit(self):
         # assign motors to object
         self.motorLeftFront = ctre.WPI_TalonSRX(Robot.frontLeftPort)
@@ -38,11 +40,10 @@ class Robot(wpilib.IterativeRobot):
         self.timer = wpilib.Timer()
         # initialize OI systems for the robot 
         self.OI = OI()
+        
+        
         # solenoids
-        self.solenoidIn = wpilib.Solenoid(Robot.solenoidPortIn)
-        self.solenoidOut = wpilib.Solenoid(Robot.solenoidPortOut)
-        # valve
-        self.compressor = wpilib.Compressor(Robot.pcmCan)
+        self.solenoid1 = wpilib.DoubleSolenoid(Robot.solenoidPortIn, Robot.solenoidPortOut)
 
     def autonomousInit(self):
         # this runs before the autonomous
@@ -67,16 +68,20 @@ class Robot(wpilib.IterativeRobot):
         # make OI do special input things
         self.OI.handleInput()
         # move the mecanum DT w/ OI modifiers
-        self.drivetrain.tankDrive(self.OI.handleNumber(self.OI.joystick0.getY(wpilib.XboxController.Hand.kLeft)),
-                                        self.OI.handleNumber(-self.OI.joystick0.getY(wpilib.XboxController.Hand.kRight)))
+        self.drivetrain.tankDrive(self.OI.handleNumber(-self.OI.joystick0.getY(wpilib.XboxController.Hand.kRight)),
+                                        self.OI.handleNumber(self.OI.joystick0.getY(wpilib.XboxController.Hand.kLeft)))
         # set solenoids
-        self.solenoidIn.set(self.OI.joystick0.getYButton())
-        self.solenoidOut.set(self.OI.joystick0.getXButton())
-        # set compressor
-        if not self.compressor.getPressureSwitchValue():
-            self.compressor.start()
-        else:
-            self.compressor.stop()
+
+        
+        if self.OI.joystick0.getXButton():
+            self.solenoid1.set(wpilib.DoubleSolenoid.Value.kForward)
+
+        elif self.OI.joystick0.getYButton():
+            self.solenoid1.set(wpilib.DoubleSolenoid.Value.kReverse)
+
+        
+        
+
     
 # this is NEEDED because threads are a thing
 # you dont want like 5 robot code instnaces, right?
