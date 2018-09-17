@@ -1,5 +1,6 @@
 **/__pycache__/
 **/.vscode/
 **/*cfg
-**/nodeids
-**/*cache*
+**/nodeids/
+**/*cache*/
+**/.pytest_cache/

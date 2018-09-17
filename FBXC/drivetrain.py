@@ -29,9 +29,9 @@ class Drivetrain:
 
     def handleDriving(self, oi, joystick):
         # drive the robot using the oi object provided as well as the number of the controller to use
-        self.drivetrain.driveCartesian(oi.handleNumber(oi.joysticks[joystick].getX(wpilib.XboxController.Hand.kLeft)),
+        self.drivetrain.driveCartesian(-oi.handleNumber(oi.joysticks[joystick].getX(wpilib.XboxController.Hand.kLeft)),
                                     oi.handleNumber(oi.joysticks[joystick].getY(wpilib.XboxController.Hand.kLeft)),
-                                    oi.joysticks[joystick].getX(wpilib.XboxController.Hand.kRight))
+                                    -oi.joysticks[joystick].getX(wpilib.XboxController.Hand.kRight))
 
     def configureMotor(self, motor):
         # configure drivetrain motors so that brownouts arent too common

@@ -9,6 +9,8 @@ from intake import *
 
 class Robot(wpilib.IterativeRobot):
     def robotInit(self):
+        # setup camera
+        wpilib.CameraServer.launch()
         # get drivetrain
         self.dt = Drivetrain()
         # get intake
