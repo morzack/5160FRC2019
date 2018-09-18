@@ -29,10 +29,15 @@ class Robot(wpilib.IterativeRobot):
 
     def autonomousPeriodic(self):
         # this method is called repeatedly
-        if self.timer.get() < 2.0:
-            self.dt.drivetrain.driveCartesian(0.8, 0, 0)
+        if self.timer.get() < 2.25:
+            self.dt.drivetrain.driveCartesian(0, -0.4, 0)
+        elif 2.25 < self.timer.get() < 4.0:
+            self.dt.drivetrain.driveCartesian(0, 0, 0)  # Stop robot
+        elif 4.0 < self.timer.get() < 5.0:
+            self.intake.out(0.4)
         else:
             self.dt.drivetrain.driveCartesian(0, 0, 0)  # Stop robot
+            self.intake.out(0.0)
     
     def teleopInit(self):
         # teleop period initialization

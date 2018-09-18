@@ -24,24 +24,31 @@ class Intake:
 
     def handleIntake(self, oi, joystick):
         # intake motor
-        if oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kRight) > 0.1:                        # out
-            self.leftIntakeMotor.set(oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kRight))
+        if oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kRight) > 0.1:                        # in
+            self.leftIntakeMotor.set(-oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kRight))
             self.rightIntakeMotor.set(oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kRight))
-        elif oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft) > 0.1:                       # in
+        elif oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft) > 0.1:                       # out
             self.leftIntakeMotor.set(oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft))
-            self.rightIntakeMotor.set(oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft))
+            self.rightIntakeMotor.set(-oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft))
         else:
             self.leftIntakeMotor.set(0)
             self.rightIntakeMotor.set(0)
         #lift
-        self.liftIntakeMotor.set(oi.joysticks[joystick].getY(wpilib.XboxController.Hand.kRight))
+        self.liftIntakeMotor.set(-oi.joysticks[joystick].getY(wpilib.XboxController.Hand.kRight))
+
+    def out(self, power):
+        self.leftIntakeMotor.set(power)
+        self.rightIntakeMotor.set(-power)
+
+    def inTake(self, power):
+        self.leftIntakeMotor.set(-power)
+        self.rightIntakeMotor.set(power)
 
     def configureMotor(self, motor):
         # configure drivetrain motors so that brownouts arent too common
-        motor.clearStickyFaults(0)
-        motor.configOpenLoopRamp(0.2, 100)
+        motor.configOpenLoopRamp(0.05, 100)
         motor.enableCurrentLimit(True)
-        motor.configContinuousCurrentLimit(55, 100)
-        motor.configPeakCurrentDuration(700, 100)
-        motor.configPeakCurrentLimit(65, 100)
-        motor.setNeutralMode(2)                      # brake is 2
+        motor.configContinuousCurrentLimit(30, 100)
+        motor.configPeakCurrentDuration(300, 100)
+        motor.configPeakCurrentLimit(45, 100)
+        motor.setNeutralMode(2) # braking is 2
