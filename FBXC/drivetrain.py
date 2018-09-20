@@ -41,4 +41,4 @@ class Drivetrain:
         motor.configContinuousCurrentLimit(55, 100)
         motor.configPeakCurrentDuration(700, 100)
         motor.configPeakCurrentLimit(65, 100)
-        motor.setNeutralMode(2)                      # br`ake is 2
+        motor.setNeutralMode(2)                      # brake is 2
