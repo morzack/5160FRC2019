@@ -27,12 +27,25 @@ class Robot(wpilib.IterativeRobot):
         self.timer.reset()
         self.timer.start()
 
+        #get the alliance the robot is on
+        #returns an Alliance, which is an int enum
+        #0 = Red
+        #1 = Blue
+        #2 = Invalid
+        self.alliance = wpilib.DriverStation.getInstance().getAlliance()
+
+        #get the position the robot takes at the driver station wall
+        #returns an int - 1, 2, or 3 depending on the location of the robot
+        self.station = wpilib.DriverStation.getInstance().getLocation()
+
     def autonomousPeriodic(self):
         # this method is called repeatedly
         if self.timer.get() < 2.0:
             self.dt.drivetrain.driveCartesian(0.8, 0, 0)
         else:
             self.dt.drivetrain.driveCartesian(0, 0, 0)  # Stop robot
+
+        
     
     def teleopInit(self):
         # teleop period initialization
