@@ -18,31 +18,28 @@ class Intake:
         self.configureMotor(self.rightIntakeMotor)
         self.configureMotor(self.leftIntakeMotor)
         # invert motors
-        self.leftIntakeMotor.setInverted(True)
+        # self.leftIntakeMotor.setInverted(True)
         # make motor group
         self.intakeMotors = wpilib.SpeedControllerGroup(self.leftIntakeMotor, self.rightIntakeMotor)
 
     def handleIntake(self, oi, joystick):
         # intake motor
         if oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kRight) > 0.1:                        # in
-            self.leftIntakeMotor.set(-oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kRight))
-            self.rightIntakeMotor.set(oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kRight))
+            self.inTake(oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft))
         elif oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft) > 0.1:                       # out
-            self.leftIntakeMotor.set(oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft))
-            self.rightIntakeMotor.set(-oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft))
+            self.outTake(oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft))
         else:
-            self.leftIntakeMotor.set(0)
-            self.rightIntakeMotor.set(0)
+            self.intakeMotors.set(0)
         #lift
         self.liftIntakeMotor.set(-oi.joysticks[joystick].getY(wpilib.XboxController.Hand.kRight))
 
-    def out(self, power):
-        self.leftIntakeMotor.set(power)
-        self.rightIntakeMotor.set(-power)
+    def outTake(self, power):
+        self.intakeMotors.set(-power)
+        # self.leftIntakeMotor.set(power)
+        # self.rightIntakeMotor.set(-power)
 
     def inTake(self, power):
-        self.leftIntakeMotor.set(-power)
-        self.rightIntakeMotor.set(power)
+        self.intakeMotors.set(power)
 
     def configureMotor(self, motor):
         # configure drivetrain motors so that brownouts arent too common
