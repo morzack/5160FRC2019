@@ -2,12 +2,15 @@ import ctre
 import wpilib
 import wpilib.drive
 import OI
+import math
 
 class Drivetrain:
     frontLeftPort = 2
     frontRightPort = 13
     backLeftPort = 1
     backRightPort = 14
+
+    wheelDiameter = 6
 
     def __init__(self):
         # setup motors
@@ -41,4 +44,13 @@ class Drivetrain:
         motor.configContinuousCurrentLimit(55, 100)
         motor.configPeakCurrentDuration(700, 100)
         motor.configPeakCurrentLimit(65, 100)
-        motor.setNeutralMode(2)                      # br`ake is 2
+        motor.setNeutralMode(2)                      # brake is 2
+
+    def convertPosition(self, position):
+        return position*Drivetrain.wheelDiameter*math.pi/256
+
+    def moveEncoder(self, distance):
+        self.frontLeftMotor.set(ctre.ControlMode.Position, self.convertPosition(distance))
+        self.frontRightMotor.set(ctre.ControlMode.Position, self.convertPosition(distance))
+        self.backLeftMotor.set(ctre.ControlMode.Position, self.convertPosition(distance))
+        self.backRightMotor.set(ctre.ControlMode.Position, self.convertPosition(distance))
