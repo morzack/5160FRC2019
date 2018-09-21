@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-import wpilib, wpilib.buttons
+import wpilib
+import wpilib.buttons
 
 class OI():
     # input modifier constants

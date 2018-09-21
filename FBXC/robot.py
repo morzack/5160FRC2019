@@ -3,34 +3,39 @@
 import wpilib
 import wpilib.drive
 import ctre
-import logging
-from OI import *
-from drivetrain import *
-from intake import *
 
-class Robot(wpilib.IterativeRobot):
+from commandbased import CommandBasedRobot
+from commands import autonomousProgram
+
+import logging
+
+import OI
+import robotmap
+from FBXC.systems import subsystems
+
+class Robot(CommandBasedRobot):
     def robotInit(self):
-        # setup camera
+        # setup camera server
         wpilib.CameraServer.launch()
-        # get drivetrain
-        self.dt = Drivetrain()
-        # get intake
-        self.intake = Intake()
+        
+        # initialize subsystems
+        subsystems.init()
+        
         # misc initializations
         # set up a timer to allow for cheap drive by time auto
         self.timer = wpilib.Timer()
+        
         # initialize OI systems for the robot 
         self.OI = OI.OI()
 
         #set up a logger
         self.logger = logging.getLogger("robot")
 
+        # auto program
+        self.autoProgram = autonomousProgram.AutoProgram()
+
     def autonomousInit(self):
         # this runs before the autonomous
-        # reset timer for auto
-        self.timer.reset()
-        self.timer.start()
-
         #get the alliance the robot is on
         #returns an Alliance, which is an int enum
         #0 = Red
@@ -57,19 +62,9 @@ class Robot(wpilib.IterativeRobot):
             #sends received data
             self.logger.info("Game data read as: {}".format(self.gameData))
         
+        # run autonomous
+        self.autoProgram.start()
 
-    def autonomousPeriodic(self):
-        # this method is called repeatedly
-        if self.timer.get() < 3:
-            self.dt.moveEncoder((14*12)-(3*12))
-        elif 3 < self.timer.get() < 4.0:
-            self.dt.drivetrain.driveCartesian(0, 0, 0)  # Stop robot
-        elif 4.0 < self.timer.get() < 5.0:
-            self.intake.outTake(0.4)
-        else:
-            self.dt.drivetrain.driveCartesian(0, 0, 0)  # Stop robot
-            self.intake.outTake(0.0)
-    
     def teleopInit(self):
         # teleop period initialization
         pass
@@ -78,10 +73,12 @@ class Robot(wpilib.IterativeRobot):
         # teleop method, called repeatedly
         # make OI do special input things
         self.OI.handleInput()
+
         # move the mecanum DT w/ OI modifiers
-        self.dt.handleDriving(self.OI, 0)
+        subsystems.dt.handleDriving(self.OI, 0)
+        
         # do stuff with intake
-        self.intake.handleIntake(self.OI, 2)
+        subsystems.intake.handleIntake(self.OI, 2)
     
 # this is NEEDED because threads are a thing
 # you dont want like 5 robot code instnaces, right?

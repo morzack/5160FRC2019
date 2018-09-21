@@ -1,37 +1,40 @@
 import ctre
 import wpilib
 import wpilib.drive
-import OI
+
+from wpilib.command.subsystem import Subsystem
+
 import math
 
-class Drivetrain:
-    frontLeftPort = 2
-    frontRightPort = 13
-    backLeftPort = 1
-    backRightPort = 14
+from FBXC import OI
+from FBXC import robotmap
 
-    wheelDiameter = 6
+class Drivetrain(Subsystem):
+    wheelDiameter = 6 # wheel diameter, in inches
 
     def __init__(self):
+        super().__init__('Drivetrain')
         # setup motors
         # assignment
-        self.frontLeftMotor = ctre.WPI_TalonSRX(Drivetrain.frontLeftPort)
-        self.frontRightMotor = ctre.WPI_TalonSRX(Drivetrain.frontRightPort)
-        self.backLeftMotor = ctre.WPI_TalonSRX(Drivetrain.backLeftPort)
-        self.backRightMotor = ctre.WPI_TalonSRX(Drivetrain.backRightPort)
+        self.frontLeftMotor = ctre.WPI_TalonSRX(robotmap.frontLeftDrive)
+        self.frontRightMotor = ctre.WPI_TalonSRX(robotmap.frontRightDrive)
+        self.backLeftMotor = ctre.WPI_TalonSRX(robotmap.backLeftDrive)
+        self.backRightMotor = ctre.WPI_TalonSRX(robotmap.backRightDrive)
+
         # configure internal motor settings
         self.configureMotor(self.frontLeftMotor)
         self.configureMotor(self.frontRightMotor)
         self.configureMotor(self.backLeftMotor)
         self.configureMotor(self.backRightMotor)
+
         # reverse left side motors
         self.frontLeftMotor.setInverted(True)
         self.backLeftMotor.setInverted(True)
+
         # create drivetrain object
         self.drivetrain = wpilib.drive.MecanumDrive(self.frontLeftMotor, self.backLeftMotor, self.frontRightMotor, self.backRightMotor)
 
     def handleDriving(self, oi, joystick):
-
         try:
             # drive the robot using the oi object provided as well as the number of the controller to use
             self.drivetrain.driveCartesian(-oi.handleNumber(oi.joysticks[joystick].getX(wpilib.XboxController.Hand.kLeft)),
@@ -51,11 +54,11 @@ class Drivetrain:
         motor.configPeakCurrentLimit(65, 100)
         motor.setNeutralMode(2)                      # brake is 2
 
-    def convertPosition(self, position):
-        return position*Drivetrain.wheelDiameter*math.pi/256
+    def inchesToTicks(self, i):
+        return i*Drivetrain.wheelDiameter*math.pi/256
 
     def moveEncoder(self, distance):
-        self.frontLeftMotor.set(ctre.ControlMode.Position, self.convertPosition(distance))
-        self.frontRightMotor.set(ctre.ControlMode.Position, self.convertPosition(distance))
-        self.backLeftMotor.set(ctre.ControlMode.Position, self.convertPosition(distance))
-        self.backRightMotor.set(ctre.ControlMode.Position, self.convertPosition(distance))
+        self.frontLeftMotor.set(ctre.ControlMode.Position, self.inchesToTicks(distance))
+        self.frontRightMotor.set(ctre.ControlMode.Position, self.inchesToTicks(distance))
+        self.backLeftMotor.set(ctre.ControlMode.Position, self.inchesToTicks(distance))
+        self.backRightMotor.set(ctre.ControlMode.Position, self.inchesToTicks(distance))

@@ -1,24 +1,27 @@
 import ctre
 import wpilib
-import OI
 
-class Intake:
-    # motor ports
-    liftIntakePort = 11
-    rightIntakePort = 10
-    leftIntakePort = 5
+from wpilib.command.subsystem import Subsystem
 
+from FBXC import OI
+from FBXC import robotmap
+
+class Intake(Subsystem):
     def __init__(self):
+        super().__init__('Intake')
         # initialize motors
-        self.liftIntakeMotor = ctre.WPI_TalonSRX(Intake.liftIntakePort)
-        self.rightIntakeMotor = ctre.WPI_TalonSRX(Intake.rightIntakePort)
-        self.leftIntakeMotor = ctre.WPI_TalonSRX(Intake.leftIntakePort)
+        self.liftIntakeMotor = ctre.WPI_TalonSRX(robotmap.liftIntake)
+        self.rightIntakeMotor = ctre.WPI_TalonSRX(robotmap.rightIntake)
+        self.leftIntakeMotor = ctre.WPI_TalonSRX(robotmap.leftIntake)
+ 
         # configure motors
         self.configureMotor(self.liftIntakeMotor)
         self.configureMotor(self.rightIntakeMotor)
         self.configureMotor(self.leftIntakeMotor)
+ 
         # invert motors
         # self.leftIntakeMotor.setInverted(True)
+ 
         # make motor group
         self.intakeMotors = wpilib.SpeedControllerGroup(self.leftIntakeMotor, self.rightIntakeMotor)
 
@@ -30,6 +33,7 @@ class Intake:
             self.outTake(oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft))
         else:
             self.intakeMotors.set(0)
+ 
         #lift
         self.liftIntakeMotor.set(-oi.joysticks[joystick].getY(wpilib.XboxController.Hand.kRight))
 
