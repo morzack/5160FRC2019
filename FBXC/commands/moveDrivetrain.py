@@ -3,7 +3,7 @@ from FBXC.systems import subsystems
 
 class MoveDrivetrain(TimedCommand):
     def __init__(self, distance, timeoutInSeconds):
-        super().__init__('move drivetrain %d inches' % distance, timeoutInSeconds)
+        super().__init__('move drivetrain %d inches' % distance)
 
         self.distance = distance
         self.requires(subsystems.dt)
