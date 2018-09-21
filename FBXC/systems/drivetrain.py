@@ -14,6 +14,9 @@ class Drivetrain(Subsystem):
 
     def __init__(self):
         super().__init__('Drivetrain')
+        # setup gyro
+        self.gyro = wpilib.ADXRS450_Gyro()
+
         # setup motors
         # assignment
         self.frontLeftMotor = ctre.WPI_TalonSRX(robotmap.frontLeftDrive)
@@ -62,3 +65,18 @@ class Drivetrain(Subsystem):
         self.frontRightMotor.set(ctre.ControlMode.Position, self.inchesToTicks(distance))
         self.backLeftMotor.set(ctre.ControlMode.Position, self.inchesToTicks(distance))
         self.backRightMotor.set(ctre.ControlMode.Position, self.inchesToTicks(distance))
+
+    def turnDegrees(self, degrees):
+        startDeg = self.getAngle()
+        # see closer direction to turn
+        x = degrees-startDeg
+        y = startDeg-degrees
+        direction = math.copysign(1, x) if abs(x)<abs(y) else math.copysign(1, y) # get direction to turn in
+
+        tolerance = 5 # in degrees
+        turnSpeed = 0.5 # ¯\_(ツ)_/¯
+        while abs(self.getAngle()-degrees)>=tolerance:
+            self.drivetrain.driveCartesian(0, 0, turnSpeed*direction)
+
+    def getAngle(self):
+        return self.gyro.getAngle()%360
