@@ -43,6 +43,7 @@ class Robot(wpilib.IterativeRobot):
         self.station = wpilib.DriverStation.getInstance().getLocation()
 
         #Get game specific message to determine order of plates on switches and scale
+        #Make sure this runs at the END of autoInit so that the data can arrive from the FMS
         #TODO: TEST THIS - MAKE SURE THAT GAME DATA CONSISTENTLY GETS READ PROPERLY
         self.gameData = wpilib.DriverStation.getInstance().getGameSpecificMessage()
 

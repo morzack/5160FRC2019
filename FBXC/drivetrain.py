@@ -28,10 +28,15 @@ class Drivetrain:
         self.drivetrain = wpilib.drive.MecanumDrive(self.frontLeftMotor, self.backLeftMotor, self.frontRightMotor, self.backRightMotor)
 
     def handleDriving(self, oi, joystick):
-        # drive the robot using the oi object provided as well as the number of the controller to use
-        self.drivetrain.driveCartesian(-oi.handleNumber(oi.joysticks[joystick].getX(wpilib.XboxController.Hand.kLeft)),
-                                    oi.handleNumber(oi.joysticks[joystick].getY(wpilib.XboxController.Hand.kLeft)),
-                                    -oi.joysticks[joystick].getX(wpilib.XboxController.Hand.kRight))
+
+        try:
+            # drive the robot using the oi object provided as well as the number of the controller to use
+            self.drivetrain.driveCartesian(-oi.handleNumber(oi.joysticks[joystick].getX(wpilib.XboxController.Hand.kLeft)),
+                                        oi.handleNumber(oi.joysticks[joystick].getY(wpilib.XboxController.Hand.kLeft)),
+                                        -oi.joysticks[joystick].getX(wpilib.XboxController.Hand.kRight))
+        except:
+            if not wpilib.DriverStation.getInstance().isFMSAttached():
+                raise
 
     def configureMotor(self, motor):
         # configure drivetrain motors so that brownouts arent too common
