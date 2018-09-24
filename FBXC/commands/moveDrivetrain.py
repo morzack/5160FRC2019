@@ -1,9 +1,9 @@
 from wpilib.command import TimedCommand
-from FBXC.systems import subsystems
+from systems import subsystems
 
 class MoveDrivetrain(TimedCommand):
     def __init__(self, distance, timeoutInSeconds):
-        super().__init__('move drivetrain %d inches' % distance)
+        super().__init__('move drivetrain %d inches' % distance, timeoutInSeconds)
 
         self.distance = distance
         self.requires(subsystems.dt)
@@ -13,7 +13,7 @@ class MoveDrivetrain(TimedCommand):
 
 class TurnDrivetrain(TimedCommand): # turn using degrees (as a delta)
     def __init__(self, degrees, timeoutInSeconds):
-        super().__init__('turn drivetrain %d degrees' % degrees)
+        super().__init__('turn drivetrain %d degrees' % degrees, timeoutInSeconds)
 
         self.degrees = degrees
         self.requires(subsystems.dt)

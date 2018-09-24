@@ -1,5 +1,5 @@
-import drivetrain
-import intake
+from systems import drivetrain
+from systems import intake
 
 dt = None
 inT = None

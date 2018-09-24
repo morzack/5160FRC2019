@@ -11,7 +11,7 @@ import logging
 
 import OI
 import robotmap
-from FBXC.systems import subsystems
+from systems import subsystems
 
 class Robot(CommandBasedRobot):
     def robotInit(self):
@@ -78,7 +78,7 @@ class Robot(CommandBasedRobot):
         subsystems.dt.handleDriving(self.OI, 0)
         
         # do stuff with intake
-        subsystems.intake.handleIntake(self.OI, 2)
+        subsystems.inT.handleIntake(self.OI, 2)
     
 # this is NEEDED because threads are a thing
 # you dont want like 5 robot code instnaces, right?

@@ -3,8 +3,8 @@ import wpilib
 
 from wpilib.command.subsystem import Subsystem
 
-from FBXC import OI
-from FBXC import robotmap
+import OI
+import robotmap
 
 class Intake(Subsystem):
     def __init__(self):

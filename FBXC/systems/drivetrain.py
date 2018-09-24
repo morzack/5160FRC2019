@@ -6,8 +6,8 @@ from wpilib.command.subsystem import Subsystem
 
 import math
 
-from FBXC import OI
-from FBXC import robotmap
+import OI
+import robotmap
 
 class Drivetrain(Subsystem):
     wheelDiameter = 6 # wheel diameter, in inches
@@ -39,8 +39,8 @@ class Drivetrain(Subsystem):
         self.drivetrain = wpilib.drive.MecanumDrive(self.frontLeftMotor, self.backLeftMotor, self.frontRightMotor, self.backRightMotor)
 
         # set up encoders
-        self.leftEncoder = wpilib.Encoder(aChannel=robotmap.leftEncoderChannelA, bChannel=robotmap.leftEncoderChannelB, encodingType=wpilib.encoder.Encoder.EncodingType.k4X)
-        self.rightEncoder = wpilib.Encoder(aChannel=robotmap.rightEncoderChannelA, bChannel=robotmap.rightEncoderChannelB, encodingType=wpilib.encoder.Encoder.EncodingType.k4X)
+        self.leftEncoder = wpilib.Encoder(aChannel=robotmap.leftEncoderChannelA, bChannel=robotmap.leftEncoderChannelB)
+        self.rightEncoder = wpilib.Encoder(aChannel=robotmap.rightEncoderChannelA, bChannel=robotmap.rightEncoderChannelB)
         self.leftEncoder.setDistancePerPulse(Drivetrain.wheelDiameter/Drivetrain.ppR)
         self.rightEncoder.setDistancePerPulse(Drivetrain.wheelDiameter/Drivetrain.ppR)
 
@@ -91,3 +91,6 @@ class Drivetrain(Subsystem):
         turnSpeed = 0.25 # ¯\_(ツ)_/¯
         while abs(self.gyro.getAngle()-degrees) >= tolerance:
             self.drivetrain.driveCartesian(0, 0, turnSpeed*direction)
+    
+    def initDefaultCommand(self):
+        self.setDefaultCommand(None)
