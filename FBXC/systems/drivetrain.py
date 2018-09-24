@@ -11,6 +11,7 @@ from FBXC import robotmap
 
 class Drivetrain(Subsystem):
     wheelDiameter = 6 # wheel diameter, in inches
+    ppR = 256 # pulses of the encoder for 1 rotation
 
     def __init__(self):
         super().__init__('Drivetrain')
@@ -37,6 +38,12 @@ class Drivetrain(Subsystem):
         # create drivetrain object
         self.drivetrain = wpilib.drive.MecanumDrive(self.frontLeftMotor, self.backLeftMotor, self.frontRightMotor, self.backRightMotor)
 
+        # set up encoders
+        self.leftEncoder = wpilib.Encoder(aChannel=robotmap.leftEncoderChannelA, bChannel=robotmap.leftEncoderChannelB, encodingType=wpilib.encoder.Encoder.EncodingType.k4X)
+        self.rightEncoder = wpilib.Encoder(aChannel=robotmap.rightEncoderChannelA, bChannel=robotmap.rightEncoderChannelB, encodingType=wpilib.encoder.Encoder.EncodingType.k4X)
+        self.leftEncoder.setDistancePerPulse(Drivetrain.wheelDiameter/Drivetrain.ppR)
+        self.rightEncoder.setDistancePerPulse(Drivetrain.wheelDiameter/Drivetrain.ppR)
+
     def handleDriving(self, oi, joystick):
         try:
             # drive the robot using the oi object provided as well as the number of the controller to use
@@ -57,26 +64,31 @@ class Drivetrain(Subsystem):
         motor.configPeakCurrentLimit(65, 100)
         motor.setNeutralMode(2)                      # brake is 2
 
+    def reset(self):
+        self.leftEncoder.reset()
+        self.rightEncoder.reset()
+        self.gyro.reset()
+
     def inchesToTicks(self, i):
         return i*Drivetrain.wheelDiameter*math.pi/256
 
+    def getDistance(self):
+        return (self.leftEncoder.getDistance()+self.rightEncoder.getDistance())/2
+
     def moveEncoder(self, distance):
-        self.frontLeftMotor.set(ctre.ControlMode.Position, self.inchesToTicks(distance))
-        self.frontRightMotor.set(ctre.ControlMode.Position, self.inchesToTicks(distance))
-        self.backLeftMotor.set(ctre.ControlMode.Position, self.inchesToTicks(distance))
-        self.backRightMotor.set(ctre.ControlMode.Position, self.inchesToTicks(distance))
+        self.reset()
+        tolerance = 1
+        speed = 0.5
+        direction = math.copysign(1, distance)
+        while abs(self.getDistance()-distance) >= tolerance:
+            self.drivetrain.driveCartesian(speed*distance, 0, 0)
 
     def turnDegrees(self, degrees):
-        startDeg = self.getAngle()
+        self.reset()
+        startDeg = self.gyro.getAngle()
         # see closer direction to turn
-        x = degrees-startDeg
-        y = startDeg-degrees
-        direction = math.copysign(1, x) if abs(x)<abs(y) else math.copysign(1, y) # get direction to turn in
-
+        direction = math.copysign(1, degrees)
         tolerance = 5 # in degrees
-        turnSpeed = 0.5 # ¯\_(ツ)_/¯
-        while abs(self.getAngle()-degrees)>=tolerance:
+        turnSpeed = 0.25 # ¯\_(ツ)_/¯
+        while abs(self.gyro.getAngle()-degrees) >= tolerance:
             self.drivetrain.driveCartesian(0, 0, turnSpeed*direction)
-
-    def getAngle(self):
-        return self.gyro.getAngle()%360

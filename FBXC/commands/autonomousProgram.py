@@ -5,7 +5,7 @@ import moveDrivetrain
 import operateIntake
 
 class AutoProgram(CommandGroup):
-    def __init__(self):
+    def __init__(self, config):
         super().__init__('Auto Program')
 
         self.addSequential(moveDrivetrain.MoveDrivetrain(132, 10)) # move to switch for 10s
