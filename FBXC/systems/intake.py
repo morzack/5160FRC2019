@@ -27,10 +27,10 @@ class Intake(Subsystem):
 
     def handleIntake(self, oi, joystick):
         # intake motor
-        if oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kRight) > 0.1:                        # in
-            self.inTake(oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft))
-        elif oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft) > 0.1:                       # out
-            self.outTake(oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft))
+        if oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kRight) > 0.1 or oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kRight) > 0.1:    # in
+            self.inTake(oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft) + oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kRight))
+        elif oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft) > 0.1 or oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft) < -0.1:   # out
+            self.outTake(oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft) + oi.joysticks[joystick].getTriggerAxis(wpilib.XboxController.Hand.kLeft))
         else:
             self.intakeMotors.set(0)
  
