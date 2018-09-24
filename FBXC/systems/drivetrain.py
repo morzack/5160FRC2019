@@ -81,11 +81,10 @@ class Drivetrain(Subsystem):
         speed = 0.5
         direction = math.copysign(1, distance)
         while abs(self.getDistance()-distance) >= tolerance:
-            self.drivetrain.driveCartesian(speed*distance, 0, 0)
+            self.drivetrain.driveCartesian(speed*direction, 0, 0)
 
     def turnDegrees(self, degrees):
         self.reset()
-        startDeg = self.gyro.getAngle()
         # see closer direction to turn
         direction = math.copysign(1, degrees)
         tolerance = 5 # in degrees
