@@ -63,6 +63,7 @@ class Robot(CommandBasedRobot):
             self.logger.info("Game data read as: {}".format(self.gameData))
         
         # run autonomous
+        self.autoProgram.addData(self.gameData, self.station)
         self.autoProgram.start()
 
     def teleopInit(self):
