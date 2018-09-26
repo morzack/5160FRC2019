@@ -5,7 +5,7 @@ class OI:
         self.driver = wpilib.XboxController(0)
         self.sysop = wpilib.XboxController(2)
         
-        self.beastMode = False
+        self.beastMode = True
         self.slowMode = False
 
         self.slowModifier = 0.6
@@ -17,8 +17,8 @@ class OI:
         return self.sysop
 
     def handleInput(self):
-        if self.driver.getAButtonPressed(): self.beastMode = not self.beastMode
-        if self.driver.getBButtonPressed(): self.slowMode = not self.slowMode
+        if self.driver.getBButtonPressed(): self.beastMode = not self.beastMode
+        if self.driver.getAButtonPressed(): self.slowMode = not self.slowMode
 
     def handleNumber(self, i):
         return (i *

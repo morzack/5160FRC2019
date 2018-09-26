@@ -14,6 +14,7 @@ class DriveWithJoystick(Command):
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
         self.robot.drivetrain.drive(self.robot.oi.getDriver())
+        self.robot.oi.handleInput()
 
     def isFinished(self):
         """Make this return true when this Command no longer needs to run execute()"""

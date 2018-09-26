@@ -1,15 +1,16 @@
 from wpilib.command import Command
 
 class ShootIntake(Command):
-    def __init__(self, robot, power=0.8):
+    def __init__(self, robot, time, power=0.8):
         super().__init__()
         self.requires(robot.intake)
         self.robot = robot
         self.power = power
+        self.time = time
 
     def initialize(self):
         """Called just before this Command runs the first time."""
-        self.setTimeout(4)
+        self.setTimeout(self.time)
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""

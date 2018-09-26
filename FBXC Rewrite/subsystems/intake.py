@@ -41,7 +41,7 @@ class Intake(Subsystem):
         if joystick.getTriggerAxis(wpilib.XboxController.Hand.kRight) > 0.1 or joystick.getY(wpilib.XboxController.Hand.kLeft) > 0.1:    # in
             self.useIntakeIn(joystick.getTriggerAxis(wpilib.XboxController.Hand.kRight) + joystick.getY(wpilib.XboxController.Hand.kLeft))
         elif joystick.getTriggerAxis(wpilib.XboxController.Hand.kLeft) > 0.1 or joystick.getY(wpilib.XboxController.Hand.kLeft) < -0.1:   # out
-            self.useIntakeOut(joystick.getTriggerAxis(wpilib.XboxController.Hand.kLeft) + joystick.getY(wpilib.XboxController.Hand.kLeft))
+            self.useIntakeOut(joystick.getTriggerAxis(wpilib.XboxController.Hand.kLeft) - joystick.getY(wpilib.XboxController.Hand.kLeft))
         else:
             self.intake.set(0)
 

@@ -26,13 +26,17 @@ class Drivetrain(Subsystem):
         self.configureMotorCurrent(self.backLeftCim)
         self.configureMotorCurrent(self.backRightCim)
 
+        # reverse left side motors
+        self.frontLeftCim.setInverted(True)
+        self.backLeftCim.setInverted(True)
+
         # make drivetrain
         self.drivetrain = mecanumdrive.MecanumDrive(self.frontLeftCim, self.backLeftCim, self.frontRightCim, self.backRightCim)
 
         # get encoders
         self.encoder = wpilib.Encoder(aChannel=robotmap.leftEncoderChannelA, bChannel=robotmap.leftEncoderChannelB, reverseDirection=False, encodingType=wpilib.Encoder.EncodingType.k4X)
         self.encoder.setPIDSourceType(wpilib.Encoder.PIDSourceType.kDisplacement)
-        self.encoder.setDistancePerPulse((6*math.pi)/(256*12))
+        self.encoder.setDistancePerPulse((6*math.pi)/(256))
 
         # setup gyro
         self.gyro = wpilib.ADXRS450_Gyro(0)
@@ -45,8 +49,8 @@ class Drivetrain(Subsystem):
     def drive(self, joystick):
         try:
             # drive the robot using the oi object provided as well as the number of the controller to use
-            self.drivetrain.driveCartesian(-self.robot.oi.handleNumber(joystick.getX(wpilib.XboxController.Hand.kLeft)),
-                                        self.robot.oi.handleNumber(joystick.getY(wpilib.XboxController.Hand.kLeft)),
+            self.drivetrain.driveCartesian(self.robot.oi.handleNumber(joystick.getX(wpilib.XboxController.Hand.kLeft)),
+                                        -self.robot.oi.handleNumber(joystick.getY(wpilib.XboxController.Hand.kLeft)),
                                         -joystick.getX(wpilib.XboxController.Hand.kRight))
         except:
             if not wpilib.DriverStation.getInstance().isFMSAttached():

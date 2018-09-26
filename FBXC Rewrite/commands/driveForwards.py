@@ -5,7 +5,7 @@ class DriveForward(Command):
     TOLERANCE = .1
     KP = -1.0/5.0 # TODO: This needs to be CORRECT, k?
 
-    def __init__(self, robot, dist, maxSpeed=0.5):
+    def __init__(self, robot, dist, maxSpeed=0.3):
         super().__init__()
         self.requires(robot.drivetrain)
         self.distance = dist
@@ -20,7 +20,7 @@ class DriveForward(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        self.error = self.distance - self.robot.drivetrain.encoder.get()
+        self.error = self.distance - self.robot.drivetrain.encoder.getDistance()
         if self.driveSpeed * self.KP * self.error >= self.driveSpeed:
             self.robot.drivetrain.drivetrain.driveCartesian(0, self.driveSpeed, 0)
         else:

@@ -39,7 +39,7 @@ class Robot(wpilib.IterativeRobot):
             if station == 3:
                 self.autonomousCommand = passAutoLineShoot.PassAutoLineShoot(self)
         else:
-            self.autonomousCommand = passAutoLineShoot.PassAutoLine(self)
+            self.autonomousCommand = passAutoLine.PassAutoLine(self)
 
     def autonomousInit(self):
         # get field data for auto
@@ -80,6 +80,7 @@ class Robot(wpilib.IterativeRobot):
         #this line or comment it out.
         if self.autonomousCommand is not None:
             self.autonomousCommand.cancel()
+        self.drivetrain.encoder.reset()
 
     def teleopPeriodic(self):
         """This function is called periodically during operator control."""
