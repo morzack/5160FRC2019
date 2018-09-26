@@ -1,33 +1,26 @@
-#!/usr/bin/env python3
+import wpilib
 
-import wpilib, wpilib.buttons
-
-class OI():
-    # input modifier constants
-    slowedAmount = 0.8     # amount to slow the robot by when slowed down (cooef)
-
-    def __init__(self):
-        # set up joysticks
-        self.joystick0 = wpilib.XboxController(0) # usually driver joystick
-        self.joystick1 = wpilib.XboxController(1) # usually driver joystick, part 2
-        self.joysticks2 = wpilib.XboxController(2) # sysop stick
-        self.joysticks = [self.joystick0, self.joystick1, self.joysticks2]   # for easier access later
-        # set up modifiers
-        self.modifiers = {"slowed" : False, "reversed" : False}
+class OI:
+    def __init__(self, robot):
+        self.driver = wpilib.XboxController(0)
+        self.sysop = wpilib.XboxController(2)
         
-    def inverseModifier(self, mod):
-        self.modifiers[mod] = not self.modifiers[mod]
+        self.beastMode = True
+        self.slowMode = False
 
-    def handleWithoutSpeed(self, i):
-        return (i * (-1 if self.modifiers["reversed"] else 1))
+        self.slowModifier = 0.6
+    
+    def getDriver(self):
+        return self.driver
+
+    def getSysop(self):
+        return self.sysop
 
     def handleInput(self):
-        # handle special input
-        if self.joystick0.getAButtonPressed(): self.inverseModifier("reversed")
-        if self.joystick0.getBButtonPressed(): self.inverseModifier("slowed")
+        if self.driver.getBButtonPressed(): self.beastMode = not self.beastMode
+        if self.driver.getAButtonPressed(): self.slowMode = not self.slowMode
 
     def handleNumber(self, i):
-        # get the value of a number modified by the modifiers
         return (i *
-                (-1 if self.modifiers["reversed"] else 1) *
-                (OI.slowedAmount if self.modifiers["slowed"] else 1))
+                (-1 if self.beastMode else 1) *
+                (self.slowModifier if self.slowMode else 1))
