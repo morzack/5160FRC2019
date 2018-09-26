@@ -11,6 +11,9 @@ class MoveDrivetrain(TimedCommand):
     def initialize(self):
         subsystems.dt.moveEncoder(self.distance)
 
+    def end(self):
+        subsystems.dt.drivetrain.driveCartesian(0, 0, 0)
+
 class TurnDrivetrain(TimedCommand): # turn using degrees (as a delta)
     def __init__(self, degrees, timeoutInSeconds):
         super().__init__('turn drivetrain %d degrees' % degrees, timeoutInSeconds)
@@ -20,3 +23,6 @@ class TurnDrivetrain(TimedCommand): # turn using degrees (as a delta)
 
     def initialize(self):
         subsystems.dt.turnDegrees(self.degrees)
+
+    def end(self):
+        subsystems.dt.drivetrain.driveCartesian(0, 0, 0)

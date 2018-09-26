@@ -10,6 +10,9 @@ class IntakeOut(TimedCommand):
 
     def initialize(self):
         subsystems.inT.outTake(self.power)
+    
+    def end(self):
+        subsystems.inT.inTake(0)
 
 class IntakeIn(TimedCommand):
     def __init__(self, power, timeoutInSeconds):
@@ -20,3 +23,6 @@ class IntakeIn(TimedCommand):
 
     def initialize(self):
         subsystems.inT.inTake(self.power)
+    
+    def end(self):
+        subsystems.inT.inTake(0)

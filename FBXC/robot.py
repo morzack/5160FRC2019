@@ -32,7 +32,7 @@ class Robot(CommandBasedRobot):
         self.logger = logging.getLogger("robot")
 
         # auto program
-        self.autoProgram = autonomousProgram.AutoProgram()
+        # self.autoProgram = autonomousProgram.AutoProgram()
 
     def autonomousInit(self):
         # this runs before the autonomous
@@ -63,8 +63,8 @@ class Robot(CommandBasedRobot):
             self.logger.info("Game data read as: {}".format(self.gameData))
         
         # run autonomous
-        self.autoProgram.addData(self.gameData, self.station)
-        self.autoProgram.start()
+        # self.autoProgram.addData(self.gameData, self.station)
+        # self.autoProgram.start()
 
     def teleopInit(self):
         # teleop period initialization

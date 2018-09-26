@@ -20,11 +20,11 @@ class AutoProgram(CommandGroup):
         self.station = station
 
         if self.gameData[0] == 'L':
-            self.initL(self.station)
+            self.initialL(self.station)
         elif self.gameData[0] == 'R':
-            self.initR(self.station)
+            self.initialR(self.station)
         else:
-            self.initD(self.station)
+            self.initialD(self.station)
 
     def forwards(self):
         self.addSequential(moveDrivetrain.MoveDrivetrain(120, 8))
@@ -34,15 +34,14 @@ class AutoProgram(CommandGroup):
     
     def eject(self):
         self.addSequential(operateIntake.IntakeOut(0.8, 3))
-    
 
     def dodgeCenter(self):
         self.addSequential(moveDrivetrain.MoveDrivetrain(60, 5))
         self.addSequential(WaitCommand(timeout=1))
         self.addSequential(moveDrivetrain.TurnDrivetrain(45, 3))
-        self.addSequential(moveDrivetrain.MoveDrivetrain(84, 5))
+        self.addSequential(moveDrivetrain.MoveDrivetrain(102, 5))
 
-    def initL(self, station): # left initialization, our plate on left side
+    def initialL(self, station): # left initialization, our plate on left side
         if station == 1: # pass auto line, chuck cube, nothing too fancy
             self.forwards()
             self.eject()
@@ -51,7 +50,7 @@ class AutoProgram(CommandGroup):
         if station == 3: # pass auto line, dont eject cube
             self.forwards()
 
-    def initR(self, station): # right initialization, our plate on the right side
+    def initialR(self, station): # right initialization, our plate on the right side
         if station == 1: # pass auto line, dont eject cube, nothing too fancy
             self.forwards()
         if station == 2: # pass auto line to the right, DODGE CUBES
@@ -60,7 +59,7 @@ class AutoProgram(CommandGroup):
             self.forwards
             self.eject()
     
-    def initD(self, station): # NANI?!? k-kansei dorifto?!?! - default initialization (CCC)
+    def initialD(self, station): # NANI?!? k-kansei dorifto?!?! - default initialization (CCC)
         if station == 1: # pass auto line, nothing too fancy
             self.forwards()
         if station == 2: # pass auto line to the right, DODGE CUBES

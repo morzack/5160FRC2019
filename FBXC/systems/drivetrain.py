@@ -40,9 +40,9 @@ class Drivetrain(Subsystem):
 
         # set up encoders
         self.leftEncoder = wpilib.Encoder(aChannel=robotmap.leftEncoderChannelA, bChannel=robotmap.leftEncoderChannelB)
-        self.rightEncoder = wpilib.Encoder(aChannel=robotmap.rightEncoderChannelA, bChannel=robotmap.rightEncoderChannelB)
+        # self.rightEncoder = wpilib.Encoder(aChannel=robotmap.rightEncoderChannelA, bChannel=robotmap.rightEncoderChannelB)
         self.leftEncoder.setDistancePerPulse(Drivetrain.wheelDiameter/Drivetrain.ppR)
-        self.rightEncoder.setDistancePerPulse(Drivetrain.wheelDiameter/Drivetrain.ppR)
+        # self.rightEncoder.setDistancePerPulse(Drivetrain.wheelDiameter/Drivetrain.ppR)
 
     def handleDriving(self, oi, joystick):
         try:
@@ -66,29 +66,29 @@ class Drivetrain(Subsystem):
 
     def reset(self):
         self.leftEncoder.reset()
-        self.rightEncoder.reset()
+        # self.rightEncoder.reset()
         self.gyro.reset()
 
     def inchesToTicks(self, i):
         return i*Drivetrain.wheelDiameter*math.pi/256
 
     def getDistance(self):
-        return (self.leftEncoder.getDistance()+self.rightEncoder.getDistance())/2
+        return (self.leftEncoder.getDistance())/2# +self.rightEncoder.getDistance())/2
 
     def moveEncoder(self, distance):
         self.reset()
         tolerance = 1
         speed = 0.5
-        direction = math.copysign(1, distance)
+        direction = -math.copysign(1, distance)
         while abs(self.getDistance()-distance) >= tolerance:
-            self.drivetrain.driveCartesian(speed*direction, 0, 0)
+            self.drivetrain.driveCartesian(0, speed*direction, 0)
 
     def turnDegrees(self, degrees):
         self.reset()
         # see closer direction to turn
         direction = math.copysign(1, degrees)
         tolerance = 5 # in degrees
-        turnSpeed = 0.25 # ¯\_(ツ)_/¯
+        turnSpeed = 0.5 # ¯\_(ツ)_/¯
         while abs(self.gyro.getAngle()-degrees) >= tolerance:
             self.drivetrain.driveCartesian(0, 0, turnSpeed*direction)
     
