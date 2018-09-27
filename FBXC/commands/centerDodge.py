@@ -2,6 +2,8 @@ from wpilib.command import CommandGroup
 
 from commands import driveForwards, turnRobot
 
+import robotmap
+
 import math
 
 class CenterDodge(CommandGroup):
@@ -12,4 +14,4 @@ class CenterDodge(CommandGroup):
         turnAngle = 5
         self.addSequential(driveForwards.DriveForward(robot, initialDistance))
         self.addSequential(turnRobot.TurnRobot(robot, turnAngle))
-        self.addSequential(driveForwards.DriveForward(robot, (144-initialDistance)/math.cos(math.radians(turnAngle))))
+        self.addSequential(driveForwards.DriveForward(robot, (140-initialDistance-robotmap.robotDiameter)/math.cos(math.radians(turnAngle))))
