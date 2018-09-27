@@ -14,3 +14,7 @@ leftEncoderChannelA = 0
 leftEncoderChannelB = 1
 rightEncoderChannelA = 2
 rightEncoderChannelB = 3
+
+# robotSize
+robotRadius = 17
+robotDiameter = robotRadius*2
