@@ -3,7 +3,7 @@
 import wpilib
 from wpilib.command import Scheduler
 
-from oi import OI
+from OI import OI
 
 import logging
 

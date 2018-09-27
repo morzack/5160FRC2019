@@ -7,4 +7,4 @@ import robotmap
 class PassAutoLine(CommandGroup):
     def __init__(self, robot):
         super().__init__()
-        self.addSequential(driveForwards.DriveForward(robot, 140-robotmap.robotDiameter))
+        self.addSequential(driveForwards.DriveForward(robot, 170-robotmap.robotDiameter))
