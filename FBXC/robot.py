@@ -23,6 +23,9 @@ class Robot(wpilib.IterativeRobot):
 
         self.autonomousCommand = None
 
+        wpilib.CameraServer.launch()
+
+
     def chooseAuto(self, station, field):
         closest = field[0]
         if station == 2:
