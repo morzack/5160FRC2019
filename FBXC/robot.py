@@ -11,6 +11,8 @@ from subsystems import drivetrain, intake, lift
 
 from commands import passAutoLineShoot, centerDodge, passAutoLine
 
+from robotpy_ext.autonomous import AutonomousModeSelector
+
 class Robot(wpilib.IterativeRobot):
     def robotInit(self):
         self.drivetrain = drivetrain.Drivetrain(self)
@@ -21,28 +23,47 @@ class Robot(wpilib.IterativeRobot):
 
         self.logger = logging.getLogger("robot")
 
-        self.autonomousCommand = None
+        self.autonomousCommand = passAutoLine.PassAutoLine(self)
 
         wpilib.CameraServer.launch()
 
+        # self.chooser = wpilib.SendableChooser()
+        # self.chooser.addObject("Left", 1)
+        # self.chooser.addDefault("Center", 2)
+        # self.chooser.addObject("Right", 3)
+
+        # wpilib.SmartDashboard.putData("Choice", self.chooser)
 
     def chooseAuto(self, station, field):
         closest = field[0]
+        if closest == "L":
+            self.autonomousCommand = passAutoLine.PassAutoLine(self)
+        elif closest == "R":
+            self.autonomousCommand = passAutoLine.PassAutoLine(self)
+        else:
+            self.autonomousCommand = passAutoLine.PassAutoLine(self)
+        return
+        self.autonomousCommand = passAutoLine.PassAutoLine(self)
+        return
         if station == 2:
-            self.autonomousCommand = centerDodge.CenterDodge(self)
-            return
-        if closest=="L":
+            if closest=="L":
+                self.autonomousCommand = centerDodge.CenterDodgeLeft(self)
+            elif closest=="R":
+                self.autonomousCommand = centerDodge.CenterDodgeRight(self)
+            else:
+                self.autonomousCommand = centerDodge.CenterDodge(self)
+        elif closest=="L":
             if station == 1:
                 self.autonomousCommand = passAutoLineShoot.PassAutoLineShoot(self)
-            if station == 3:
+            elif station == 3:
                 self.autonomousCommand = passAutoLine.PassAutoLine(self)
         elif closest=="R":
             if station == 1:
                 self.autonomousCommand = passAutoLine.PassAutoLine(self)
-            if station == 3:
+            elif station == 3:
                 self.autonomousCommand = passAutoLineShoot.PassAutoLineShoot(self)
         else:
-            self.autonomousCommand = passAutoLine.PassAutoLine(self)
+            self.autonomousCommand = centerDodge.CenterDodge(self)
 
     def autonomousInit(self):
         # get field data for auto
@@ -50,8 +71,10 @@ class Robot(wpilib.IterativeRobot):
 
         # get the position the robot takes at the driver station wall
         # returns an int - 1, 2, or 3 depending on the location of the robot
-        station = wpilib.DriverStation.getInstance().getLocation()
-
+        # station = self.chooser.getSelected()
+        # if not (station in [1, 2, 3]):
+        #    station = wpilib.DriverStation.getInstance().getLocation()
+        station = 0
         # Get game specific message to determine order of plates on switches and scale
         # Make sure this runs at the END of autoInit so that the data can arrive from the FMS
         gameData = wpilib.DriverStation.getInstance().getGameSpecificMessage()
@@ -66,9 +89,8 @@ class Robot(wpilib.IterativeRobot):
             # sends received data
             self.logger.info("Game data read as: {}".format(gameData))
 
-        self.chooseAuto(station, gameData)
+        # self.chooseAuto(station, gameData)
         self.autonomousCommand.start()
-        pass
 
     def autonomousPeriodic(self):
         """This function is called periodically during autonomous"""
@@ -93,6 +115,7 @@ class Robot(wpilib.IterativeRobot):
     def testPeriodic(self):
         """This function is called periodically during test mode."""
         # wpilib.LiveWindow.run()
+        pass
 
     def disabledInit(self):
         pass
@@ -102,6 +125,10 @@ class Robot(wpilib.IterativeRobot):
         self.log()
 
     def log(self):
+        # print("bl SRX %s" % self.drivetrain.backLeftCim.getOutputCurrent())
+        # print("br SRX %s"  % self.drivetrain.backLeftCim.getOutputCurrent())
+        # print("fl SRX %s"  % self.drivetrain.backLeftCim.getOutputCurrent())
+        # print("fr SRX %s"  % self.drivetrain.backLeftCim.getOutputCurrent())
         pass
 
 if __name__ == "__main__":

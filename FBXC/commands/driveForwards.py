@@ -3,7 +3,7 @@ from wpilib.command import Command
 class DriveForward(Command):
     
     TOLERANCE = .1
-    KP = -1.0/50.0 # TODO: This needs to be CORRECT, k?
+    KP = -1.0/100.0 # TODO: This needs to be CORRECT, k?
 
     def __init__(self, robot, dist, maxSpeed=0.3):
         super().__init__()
@@ -16,7 +16,8 @@ class DriveForward(Command):
     def initialize(self):
         """Called just before this Command runs the first time."""
         self.robot.drivetrain.encoder.reset()
-        self.setTimeout(7)
+        self.setTimeout(3)
+        self.robot.drivetrain.gyro.reset()
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""

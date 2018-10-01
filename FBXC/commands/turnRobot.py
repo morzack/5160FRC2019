@@ -5,17 +5,19 @@ class TurnRobot(Command):
     TOLERANCE = 5
     KP = -1.0/5.0 # TODO: This needs to be CORRECT, k?
 
-    def __init__(self, robot, dist, maxSpeed=0.5):
+    def __init__(self, robot, dist, maxSpeed=0.5, reset=True):
         super().__init__()
         self.requires(robot.drivetrain)
         self.distance = dist
         self.driveSpeed = maxSpeed
+        self.reset = reset
         self.robot = robot
         self.error = 0
 
     def initialize(self):
         """Called just before this Command runs the first time."""
-        self.robot.drivetrain.gyro.reset()
+        if self.reset:
+            self.robot.drivetrain.gyro.reset()
         self.setTimeout(4)
 
     def execute(self):
