@@ -14,8 +14,7 @@ class ShootIntake(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        # self.robot.intake.useIntakeOut(self.power)
-        pass
+        self.robot.intake.useIntakeOut(self.power)
 
     def isFinished(self):
         """Make this return true when this Command no longer needs to run execute()"""
