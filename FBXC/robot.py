@@ -25,7 +25,8 @@ class Robot(wpilib.IterativeRobot):
 
         self.autonomousCommand = None
 
-        wpilib.CameraServer.launch()
+        wpilib.CameraServer.launch(0)
+        wpilib.CameraServer.launch(1)
 
         self.chooser = wpilib.SendableChooser()
         self.chooser.addObject("Left", 1)
