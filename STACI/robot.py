@@ -83,6 +83,10 @@ class Robot(wpilib.IterativeRobot):
         elif self.OI.joystick0.getTriggerAxis(wpilib.Joystick.Hand.kLeft) >= 0.1:
             self.leftSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
             self.rightSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
+        else:
+            self.leftSolenoid.set(wpilib.DoubleSolenoid.Value.kOff)
+            self.rightSolenoid.set(wpilib.DoubleSolenoid.Value.kOff)
+            
         
     
 # this is NEEDED because threads are a thing
