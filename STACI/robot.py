@@ -16,10 +16,13 @@ class Robot(wpilib.IterativeRobot):
     backRightPort = 2
 
     # compressor
-    solenoidPortIn = 0
-    solenoidPortOut = 1
-    pcmCan = 0
+    # TODO Get Real Numbers
+    leftSolenoidIn = 4
+    leftSolenoidOut = 5
+    rightSolenoidIn = 2
+    rightSolenoidOut = 3
 
+    pcmCan = 0
 
 
     def robotInit(self):
@@ -40,10 +43,11 @@ class Robot(wpilib.IterativeRobot):
         self.timer = wpilib.Timer()
         # initialize OI systems for the robot 
         self.OI = OI()
-        
-        
+                
         # solenoids
-        self.solenoid1 = wpilib.DoubleSolenoid(Robot.solenoidPortIn, Robot.solenoidPortOut)
+        self.leftSolenoid = wpilib.DoubleSolenoid(Robot.leftSolenoidIn, Robot.leftSolenoidOut)
+        self.rightSolenoid = wpilib.DoubleSolenoid(Robot.rightSolenoidIn, Robot.rightSolenoidOut)
+
 
     def autonomousInit(self):
         # this runs before the autonomous
@@ -53,15 +57,17 @@ class Robot(wpilib.IterativeRobot):
 
     def autonomousPeriodic(self):
         # this method is called repeatedly
-        if self.timer.get() < 2.0:
-            self.drivetrain.tankDrive(-0.8, -0.8)
-        else:
-            self.drivetrain.tankDrive(0, 0)  # Stop robot
-        self.motorLeftBack.set
+        # if self.timer.get() < 2.0:
+        #     self.drivetrain.tankDrive(-0.8, -0.8)
+        # else:
+        #     self.drivetrain.tankDrive(0, 0)  # Stop robot
+        pass
+
     
     def teleopInit(self):
         # teleop period initialization
         pass
+
 
     def teleopPeriodic(self):
         # teleop method, called repeatedly
@@ -71,17 +77,17 @@ class Robot(wpilib.IterativeRobot):
         self.drivetrain.tankDrive(self.OI.handleNumber(-self.OI.joystick0.getY(wpilib.XboxController.Hand.kRight)),
                                         self.OI.handleNumber(self.OI.joystick0.getY(wpilib.XboxController.Hand.kLeft)))
         # set solenoids
-
+        if self.OI.joystick0.getTriggerAxis(wpilib.Joystick.Hand.kRight) >= 0.1:
+            self.leftSolenoid.set(wpilib.DoubleSolenoid.Value.kForward)
+            self.rightSolenoid.set(wpilib.DoubleSolenoid.Value.kForward)
+        elif self.OI.joystick0.getTriggerAxis(wpilib.Joystick.Hand.kLeft) >= 0.1:
+            self.leftSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
+            self.rightSolenoid.set(wpilib.DoubleSolenoid.Value.kReverse)
+        else:
+            self.leftSolenoid.set(wpilib.DoubleSolenoid.Value.kOff)
+            self.rightSolenoid.set(wpilib.DoubleSolenoid.Value.kOff)
+            
         
-        if self.OI.joystick0.getXButton():
-            self.solenoid1.set(wpilib.DoubleSolenoid.Value.kForward)
-
-        elif self.OI.joystick0.getYButton():
-            self.solenoid1.set(wpilib.DoubleSolenoid.Value.kReverse)
-
-        
-        
-
     
 # this is NEEDED because threads are a thing
 # you dont want like 5 robot code instnaces, right?
