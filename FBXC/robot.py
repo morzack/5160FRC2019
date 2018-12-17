@@ -57,8 +57,6 @@ class Robot(wpilib.IterativeRobot):
             self.autonomousCommand = centerDodge.CenterDodge(self)
 
     def autonomousInit(self):
-<<<<<<< HEAD
-<<<<<<< HEAD
         # this runs before the autonomous
         # reset timer for auto
         self.timer.reset()
@@ -96,10 +94,6 @@ class Robot(wpilib.IterativeRobot):
             if not wpilib.DriverStation.getInstance().isFMSAttached():
                 raise
 
-        
-=======
-=======
->>>>>>> a36b7a2c3472c1243253a081dfc13636a13d5845
         # get field data for auto
         alliance = wpilib.DriverStation.getInstance().getAlliance()
 
@@ -127,10 +121,6 @@ class Robot(wpilib.IterativeRobot):
 
         # self.chooseAuto(station, gameData)
         self.autonomousCommand.start()
-<<<<<<< HEAD
->>>>>>> a36b7a2c3472c1243253a081dfc13636a13d5845
-=======
->>>>>>> a36b7a2c3472c1243253a081dfc13636a13d5845
 
     def autonomousPeriodic(self):
         """This function is called periodically during autonomous"""
