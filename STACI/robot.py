@@ -17,8 +17,8 @@ class Robot(wpilib.IterativeRobot):
 
     # compressor
     # TODO Get Real Numbers
-    leftSolenoidIn = 0
-    leftSolenoidOut = 1
+    leftSolenoidIn = 4
+    leftSolenoidOut = 5
     rightSolenoidIn = 2
     rightSolenoidOut = 3
 
